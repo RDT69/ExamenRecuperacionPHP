@@ -1,14 +1,17 @@
 <?php
-class Persona {
+class Persona
+{
     public $nombre;
     public $edad;
 
-    public function __construct($nombre, $edad) {
+    public function __construct($nombre, $edad)
+    {
         $this->nombre = $nombre;
         $this->edad = $edad;
     }
 
-    public function mostrarInformacion() {
+    public function mostrarInformacion()
+    {
         echo "Nombre: " . $this->nombre . ", Edad: " . $this->edad . "<br>";
     }
 }
@@ -30,4 +33,3 @@ foreach ($arrayPersonas as $nombre => $persona) {
     echo "Informacion: ";
     $persona->mostrarInformacion();
 }
-?>
