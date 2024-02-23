@@ -1,34 +1,49 @@
 <?php
-$tiempo = time() + 604800;
-
-if(isset($_COOKIE['idioma'])){
-setcookie('idioma', $_COOKIE['idioma'], $tiempo);
-header('Location: bienvenidad.php');
+// Verificar si se ha seleccionado un idioma
+if (isset($_COOKIE['idioma'])) {
+    $idioma = $_COOKIE['idioma'];
+} else {
+    // Si no hay cookie de idioma, mostrar formulario para seleccionar idioma
+    if (isset($_POST['idioma'])) {
+        $idioma = $_POST['idioma'];
+        setcookie('idioma', $idioma, time() + (7 * 24 * 60 * 60), "/");
+    } else {
+        // Si no se ha seleccionado idioma previamente, mostrar formulario
+        echo '<form method="post" action="">
+                <label for="idioma">Selecciona tu idioma:</label>
+                <select name="idioma" id="idioma">
+                    <option value="es">Español</option>
+                    <option value="en">Inglés</option>
+                    <option value="fr">Francés</option>
+                </select>
+                <input type="submit" value="Guardar idioma">
+            </form>';
+        return;
+    }
 }
 
-if(isset($_POST['idioma']) && !empty($_POST['idioma'])) {
-  $idioma = $_POST['idioma'];
-setcookie('idioma', $idioma, $tiempo);
-header('Location: bienvenidad.php');
+// Mostrar mensaje de bienvenida según el idioma seleccionado
+if ($idioma == 'es') {
+    $mensajeBienvenida = "Bienvenido";
+} elseif ($idioma == 'en') {
+    $mensajeBienvenida = "Welcome";
+} elseif ($idioma == 'fr') {
+    $mensajeBienvenida = "Bienvenue";
 }
 
+// Mostrar mensaje de última visita
+if (isset($_COOKIE['ultima_visita'])) {
+    $ultimaVisita = $_COOKIE['ultima_visita'];
+} else {
+    $ultimaVisita = "Primera visita";
+}
+
+// Mostrar página de bienvenida
+echo "<h1>$mensajeBienvenida</h1>";
+echo "<p>Última visita: $ultimaVisita</p>";
+echo '<a href="eliminar_idioma.php">Eliminar preferencia de idioma</a>';
+echo '<a href="eliminar_visita.php">Eliminar registro de última visita</a>';
+
+// Guardar la fecha de la última visita en una cookie
+setcookie('ultima_visita', date("d/m/Y H:i:s"), time() + (7 * 24 * 60 * 60), "/");
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  <h1>Pagina de inicio</h1>
-
-  <form method="POST" action="bienvenidad.php">
-    Selecciona un idioma: 
-      <p>Indica el idioma que deseas: (español/ingles/frances)</p>
-      <input style="text-transform:lowercase" type="text" name="idioma">
-      <input type="submit" name="enviar" value="Enviar">
-  </form>
-
-</body>
-</html>
